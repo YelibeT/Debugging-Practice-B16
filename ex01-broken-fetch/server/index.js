@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-
 const app = express();
 const PORT = 3001;
+require('dotenv').config();
 
 // In-memory data store
 let items = [
@@ -15,8 +15,8 @@ let nextId = 4;
 
 // Middleware
 app.use(cors());
+app.use(express.json())
 // BUG: Missing express.json() middleware - will cause req.body to be undefined
-// app.use(express.json());
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -25,10 +25,11 @@ app.use((req, res, next) => {
 });
 
 // BUG: Wrong path - should be /api/items but using /api/item
-app.get('/api/item', (req, res) => {
+app.get('/api/items', (req, res) => {
   console.log('GET /api/items - Fetching all items');
   // BUG: JSON shape mismatch - returning array instead of object with items property
-  res.json(items);
+  const obj = JSON.parse(items)
+  res.json(obj);
 });
 
 app.post('/api/items', (req, res) => {
@@ -38,8 +39,9 @@ app.post('/api/items', (req, res) => {
 
   if (!name) {
     console.error('POST /api/items - Error: name is required');
-    res.status(400).json({ error: 'Name is required' });
+    return res.status(400).json({ error: 'Name is required' });
     // BUG: Missing return - will cause "headers already sent" error
+    //what should it return
   }
 
   const newItem = {

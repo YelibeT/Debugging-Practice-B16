@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 // BUG: Wrong port - should be 3001, using 3000
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'http://localhost:3001/api';
 
 function App() {
   const [items, setItems] = useState([]);
